@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tour Planner</title>
+    <style>
+      :root {
+        --orange: orange;
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      h3 {
+        font-size: 3rem;
+        margin-top: 20vh;
+      }
+      .home {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 0;
+        color: #fff;
+        text-align: center;
+        overflow: hidden;
+      }
+      .home .content h3 {
+        font-size: 3.5rem;
+        color: var(--orange);
+        text-transform: uppercase;
+      }
+      .home .content p {
+        font-size: 2rem;
+        margin: 1rem 0;
+      }
+      .home .video-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+      button {
+        padding: 1%;
+        width: 10vw;
+        font-size: larger;
+        background-color: lightgreen;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #90ee90;
+      }
+
+      /* Media Queries for Responsiveness */
+      @media (max-width: 1200px) {
+        .home .content h3 {
+          font-size: 3rem;
+        }
+        .home .content p {
+          font-size: 2rem;
+        }
+        button {
+          width: 15vw;
+          padding: 2%;
+          font-size: larger;
+        }
+      }
+
+      @media (max-width: 991px) {
+        .home .content h3 {
+          font-size: 2.5rem;
+        }
+        .home .content p {
+          font-size: 2rem;
+        }
+        button {
+          width: 18vw;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .home .content h3 {
+          font-size: 2rem;
+        }
+        .home .content p {
+          font-size: 1.5rem;
+        }
+        button {
+          width: 25vw;
+          font-size: medium;
+        }
+      }
+
+      @media (max-width: 450px) {
+        .home .content h3 {
+          font-size: 1.8rem;
+        }
+        .home .content p {
+          font-size: 1.2rem;
+        }
+        button {
+          width: 35vw;
+          padding: 3%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="home">
+      <div class="content">
+        <h3>TOUR PLANNER</h3>
+        <p>
+          “Traveling - it leaves you speechless, then turns you into a
+          storyteller.”
+        </p>
+        <p>Welcome to our website!!!</p>
+        <button onclick="window.open('signup.html')">Open</button>
+      </div>
+      <div class="video-container">
+        <video
+          src="openvideo.mp4"
+          id="video-slider"
+          loop
+          autoplay
+          muted
+        ></video>
+      </div>
+    </section>
+
+    <script>
+      const videoBtns = document.querySelectorAll(".vid-btn");
+      const videoSlider = document.querySelector("#video-slider");
+
+      videoBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          videoBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const src = btn.getAttribute("data-src");
+          videoSlider.src = src;
+        });
+      });
+    </script>
+  </body>
+</html>
