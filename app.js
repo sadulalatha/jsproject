@@ -1,6 +1,10 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -11,10 +15,9 @@ const firebaseConfig = {
   projectId: "login-form-8dfe6",
   storageBucket: "login-form-8dfe6.firebasestorage.app",
   messagingSenderId: "771562523703",
-  appId: "1:771562523703:web:7b0b946d64c1f1d34bc3b2"
+  appId: "1:771562523703:web:7b0b946d64c1f1d34bc3b2",
 };
 // Firebase Config
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -48,8 +51,8 @@ function updateForm() {
   const toggleLink = document.getElementById("toggle-link");
   toggleLink.addEventListener("click", (e) => {
     e.preventDefault();
-    isSignup = !isSignup; // Toggle between login and signup mode
-    updateForm(); // Update form based on the new mode
+    isSignup = !isSignup;
+    updateForm();
   });
 }
 
@@ -76,10 +79,15 @@ form.addEventListener("submit", (e) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         alert("Login successful!");
-        window.open("tourplanner.html","_blank")
+        window.open("tourplanner.html", "_blank");
         console.log("User:", userCredential.user);
         form.reset();
       })
       .catch((error) => alert("Error: " + error.message));
   }
+});
+const guestButton = document.getElementById("guest-button");
+guestButton.addEventListener("click", () => {
+  alert("You are logged in as a guest!");
+  window.open("tourplanner.html");
 });

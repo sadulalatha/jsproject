@@ -9,74 +9,137 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <style>
-      body {
-        font-family: Arial, sans-serif;
+      body,
+      html {
         margin: 0;
         padding: 0;
-        background-color: #f4f4f9;
-        color: #333;
-        background: linear-gradient(to right, #78ffd6, #007991);
+        font-family: Arial, sans-serif;
+        height: 100%;
+        background: linear-gradient(to bottom, #007acc, #005f99);
+        color: #fff;
       }
-      .home {
+
+      section.home {
+        padding: 20px;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
-        min-height: 90vh;
-        text-align: center;
-        padding: 20px;
       }
-      .content h3 {
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-        color: #2d6a4f;
-      }
-      #details {
-        background: #ffffff75;
-        box-shadow: 0px 4px 6px rgba(221, 30, 30, 0.1);
+
+      .content {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: rgba(255, 255, 255, 0.9);
         border-radius: 10px;
         padding: 20px;
-        width: 70%;
-        margin: 20px auto;
-        text-align: left;
-        line-height: 2;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        color: #333;
       }
+
+      #details {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f0f8ff;
+        border-radius: 8px;
+      }
+
+      #details p {
+        margin: 10px 0;
+      }
+
       #details input {
-        width: 100%;
+        display: none;
         padding: 5px;
-        margin-bottom: 10px;
+        margin: 10px 0;
+        width: 100%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        background-color: #007acc;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #005f99;
+      }
+
+      button#cancel-button {
+        background-color: #f44336;
+      }
+
+      #payment-section {
+        display: none;
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f0f8ff;
+        border-radius: 8px;
+      }
+
+      #credit-card-form,
+      #paypal-form {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
         border: 1px solid #ccc;
         border-radius: 5px;
       }
+      .payment-method input {
+        margin-right: 10px;
+      }
+      #payment-heading {
+        color: black;
+      }
+
+      #error-message,
       #success-message {
-        margin-top: 10px;
-      }
-      #error-message {
-        color: #d00000;
-        font-size: 1.2rem;
-        margin: 20px;
         display: none;
-      }
-      #error-message a {
-        color: #023b59;
-        text-decoration: none;
         font-weight: bold;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        color: #721c24;
+        margin-top: 20px;
       }
-      #error-message a:hover {
+
+      #error-message {
+        background-color: #f8d7da;
+      }
+
+      #success-message {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      a {
+        color: #007acc;
+        text-decoration: none;
+      }
+
+      a:hover {
         text-decoration: underline;
       }
-      button {
-        background: #2d6a4f;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        margin: 10px;
+      #credit-card,
+      #paypal {
+        color: #000;
       }
-      button:hover {
-        background: #40916c;
+      .payment-method label {
+        color: #000;
+      }
+
+      .payment-method input {
+        accent-color: #000;
+      }
+      #heading {
+        color: #000;
       }
     </style>
   </head>
@@ -94,27 +157,27 @@
           <p>
             <strong>Name:</strong>
             <span id="name"></span>
-            <input id="edit-name" type="text" style="display: none" />
+            <input id="edit-name" type="text" />
           </p>
           <p>
             <strong>Place:</strong>
             <span id="place"></span>
-            <input id="edit-place" type="text" style="display: none" />
+            <input id="edit-place" type="text" />
           </p>
           <p>
             <strong>Guests:</strong>
             <span id="guests"></span>
-            <input id="edit-guests" type="number" style="display: none" />
+            <input id="edit-guests" type="number" />
           </p>
           <p>
             <strong>Arrival Date:</strong>
             <span id="arrival"></span>
-            <input id="edit-arrival" type="date" style="display: none" />
+            <input id="edit-arrival" type="date" />
           </p>
           <p>
             <strong>Leaving Date:</strong>
             <span id="leaving"></span>
-            <input id="edit-leaving" type="date" style="display: none" />
+            <input id="edit-leaving" type="date" />
           </p>
         </div>
         <div id="button-container" style="display: none">
@@ -134,52 +197,159 @@
             Cancel
           </button>
           <button id="home-button" onclick="goHome()">Home</button>
+          <button id="proceed-payment-button" onclick="showPaymentSection()">
+            Proceed to Payment
+          </button>
         </div>
+      </div>
+
+      <!-- Payment Section -->
+      <div id="payment-section">
+        <h3 id="payment-heading">Select Payment Method</h3>
+        <div class="payment-method">
+          <input
+            type="radio"
+            id="credit-card"
+            name="paymentMethod"
+            value="creditCard"
+            onclick="handlePaymentMethodSelection('creditCard')"
+          />
+          <label for="credit-card">Credit Card</label>
+          <br />
+          <input
+            type="radio"
+            id="paypal"
+            name="paymentMethod"
+            value="paypal"
+            onclick="handlePaymentMethodSelection('paypal')"
+          />
+          <label for="paypal">PayPal</label>
+        </div>
+
+        <div id="credit-card-form">
+          <h4 id="heading">Credit Card Details</h4>
+          <input type="text" placeholder="Card Number" />
+          <input type="text" placeholder="Expiry Date" />
+          <input type="text" placeholder="CVV" />
+        </div>
+
+        <div id="paypal-form">
+          <h4 id="heading">PayPal Details</h4>
+          <input type="email" placeholder="PayPal Email" />
+        </div>
+
+        <button onclick="confirmPayment()">Confirm Payment</button>
+        <p id="payment-message"></p>
       </div>
     </section>
 
     <script>
-      const params = new URLSearchParams(window.location.search);
-      const Name = params.get("Name") || localStorage.getItem("Name");
-      const placeName =
-        params.get("placeName") || localStorage.getItem("placeName");
-      const guests = params.get("guests") || localStorage.getItem("guests");
-      const arrivalDate =
-        params.get("arrivalDate") || localStorage.getItem("arrivalDate");
-      const leavingDate =
-        params.get("leavingDate") || localStorage.getItem("leavingDate");
+      window.onload = function () {
+        // Get values from query parameters or localStorage
+        const params = new URLSearchParams(window.location.search);
+        const Name = params.get("Name") || localStorage.getItem("Name");
+        const placeName =
+          params.get("placeName") || localStorage.getItem("placeName");
+        const guests = params.get("guests") || localStorage.getItem("guests");
+        const arrivalDate =
+          params.get("arrivalDate") || localStorage.getItem("arrivalDate");
+        const leavingDate =
+          params.get("leavingDate") || localStorage.getItem("leavingDate");
 
-      function goHome() {
-        localStorage.removeItem("Name");
-        localStorage.removeItem("placeName");
-        localStorage.removeItem("guests");
-        localStorage.removeItem("arrivalDate");
-        localStorage.removeItem("leavingDate");
-        window.location.href = "tourplanner.html";
+        // Check if any required data is missing (either from localStorage or URL params)
+        if (!Name || !placeName || !guests || !arrivalDate || !leavingDate) {
+          document.getElementById("error-message").style.display = "block";
+          document.getElementById("success-message").style.display = "none";
+          document.getElementById("details").style.display = "none";
+          document.getElementById("button-container").style.display = "none";
+        } else {
+          // If all data exists, display the success message and details
+          document.getElementById("error-message").style.display = "none";
+          document.getElementById("success-message").style.display = "block";
+          document.getElementById("details").style.display = "block";
+          document.getElementById("button-container").style.display = "block";
+
+          // Fill in the booking details
+          document.getElementById("name").textContent = Name;
+          document.getElementById("place").textContent = placeName;
+          document.getElementById("guests").textContent = guests;
+          document.getElementById("arrival").textContent = arrivalDate;
+          document.getElementById("leaving").textContent = leavingDate;
+
+          // Clear localStorage after displaying booking details
+          localStorage.removeItem("Name");
+          localStorage.removeItem("placeName");
+          localStorage.removeItem("guests");
+          localStorage.removeItem("arrivalDate");
+          localStorage.removeItem("leavingDate");
+        }
+      };
+
+      // Show payment section
+      function showPaymentSection() {
+        document.getElementById("payment-section").style.display = "block";
       }
 
-      // Check if data exists
-      if (Name && placeName && guests && arrivalDate && leavingDate) {
-        document.getElementById("error-message").style.display = "none";
-        document.getElementById("success-message").style.display = "block";
-        document.getElementById("details").style.display = "block";
-        document.getElementById("button-container").style.display = "block";
+      // Handle payment method selection
+      function handlePaymentMethodSelection(method) {
+        document.getElementById("credit-card-form").style.display = "none";
+        document.getElementById("paypal-form").style.display = "none";
 
-        // Fill in the booking details
-        document.getElementById("name").textContent = Name;
-        document.getElementById("place").textContent = placeName;
-        document.getElementById("guests").textContent = guests;
-        document.getElementById("arrival").textContent = arrivalDate;
-        document.getElementById("leaving").textContent = leavingDate;
-      } else {
-        document.getElementById("error-message").style.display = "block";
-        document.getElementById("button-container").style.display = "none";
+        if (method === "creditCard") {
+          document.getElementById("credit-card-form").style.display = "block";
+        } else if (method === "paypal") {
+          document.getElementById("paypal-form").style.display = "block";
+        }
       }
 
+      // Confirm the payment
+      function confirmPayment() {
+        const paymentMethod = document.querySelector(
+          'input[name="paymentMethod"]:checked'
+        );
+        const paymentMessage = document.getElementById("payment-message");
+
+        if (!paymentMethod) {
+          paymentMessage.textContent = "Please select a payment method!";
+          paymentMessage.style.color = "red";
+        } else {
+          paymentMessage.textContent = `Payment successful via ${paymentMethod.value}!`;
+          paymentMessage.style.color = "green";
+        }
+      }
+
+      // Edit booking details
       function editDetails() {
-        toggleEditMode(true);
+        document.getElementById("edit-name").value =
+          document.getElementById("name").textContent;
+        document.getElementById("edit-place").value =
+          document.getElementById("place").textContent;
+        document.getElementById("edit-guests").value =
+          document.getElementById("guests").textContent;
+        document.getElementById("edit-arrival").value =
+          document.getElementById("arrival").textContent;
+        document.getElementById("edit-leaving").value =
+          document.getElementById("leaving").textContent;
+
+        // Show input fields and hide text spans
+        document.getElementById("edit-name").style.display = "inline";
+        document.getElementById("edit-place").style.display = "inline";
+        document.getElementById("edit-guests").style.display = "inline";
+        document.getElementById("edit-arrival").style.display = "inline";
+        document.getElementById("edit-leaving").style.display = "inline";
+
+        document.getElementById("name").style.display = "none";
+        document.getElementById("place").style.display = "none";
+        document.getElementById("guests").style.display = "none";
+        document.getElementById("arrival").style.display = "none";
+        document.getElementById("leaving").style.display = "none";
+
+        document.getElementById("save-button").style.display = "inline";
+        document.getElementById("cancel-button").style.display = "inline";
+        document.getElementById("edit-button").style.display = "none";
       }
 
+      // Save edited booking details
       function saveDetails() {
         document.getElementById("name").textContent =
           document.getElementById("edit-name").value;
@@ -192,32 +362,45 @@
         document.getElementById("leaving").textContent =
           document.getElementById("edit-leaving").value;
 
-        toggleEditMode(false);
+        document.getElementById("edit-name").style.display = "none";
+        document.getElementById("edit-place").style.display = "none";
+        document.getElementById("edit-guests").style.display = "none";
+        document.getElementById("edit-arrival").style.display = "none";
+        document.getElementById("edit-leaving").style.display = "none";
+
+        document.getElementById("name").style.display = "inline";
+        document.getElementById("place").style.display = "inline";
+        document.getElementById("guests").style.display = "inline";
+        document.getElementById("arrival").style.display = "inline";
+        document.getElementById("leaving").style.display = "inline";
+
+        document.getElementById("save-button").style.display = "none";
+        document.getElementById("cancel-button").style.display = "none";
+        document.getElementById("edit-button").style.display = "inline";
       }
 
+      // Cancel editing
       function cancelEdit() {
-        toggleEditMode(false);
+        document.getElementById("edit-name").style.display = "none";
+        document.getElementById("edit-place").style.display = "none";
+        document.getElementById("edit-guests").style.display = "none";
+        document.getElementById("edit-arrival").style.display = "none";
+        document.getElementById("edit-leaving").style.display = "none";
+
+        document.getElementById("name").style.display = "inline";
+        document.getElementById("place").style.display = "inline";
+        document.getElementById("guests").style.display = "inline";
+        document.getElementById("arrival").style.display = "inline";
+        document.getElementById("leaving").style.display = "inline";
+
+        document.getElementById("save-button").style.display = "none";
+        document.getElementById("cancel-button").style.display = "none";
+        document.getElementById("edit-button").style.display = "inline";
       }
 
-      function toggleEditMode(editMode) {
-        const inputs = document.querySelectorAll("#details input");
-        const spans = document.querySelectorAll("#details span");
-
-        inputs.forEach((input, index) => {
-          input.style.display = editMode ? "inline-block" : "none";
-          spans[index].style.display = editMode ? "none" : "inline";
-          if (editMode) input.value = spans[index].textContent;
-        });
-
-        document.getElementById("edit-button").style.display = editMode
-          ? "none"
-          : "inline-block";
-        document.getElementById("save-button").style.display = editMode
-          ? "inline-block"
-          : "none";
-        document.getElementById("cancel-button").style.display = editMode
-          ? "inline-block"
-          : "none";
+      // Go home
+      function goHome() {
+        window.location.href = "tourplanner.html";
       }
     </script>
   </body>
